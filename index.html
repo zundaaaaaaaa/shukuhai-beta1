@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>宿題配信サービス index版 ver.0.1.8</title>
+    <style>
+        #dialog {
+            border: 1px solid #ccc;
+            padding: 20px;
+            background: #f9f9f9;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            display: none;
+            opacity: 0;
+            transition: opacity 0.5s ease-in-out;
+            z-index: 3;
+        }
+        #overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5); /* 半透明のグレー背景 */
+            opacity: 0;
+            transition: opacity 0.5s ease-in-out;
+            z-index: 2;
+        }
+        .image-button {
+            border: none;
+            background-color: transparent;
+            cursor: pointer;
+        }
+        .image-button img {
+            width: 75px; /* 画像の幅を75pxに調整 */
+            height: auto;
+        }
+        .popup-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5); /* 半透明のグレー背景 */
+            opacity: 0;
+            transition: opacity 0.5s ease-in-out;
+            z-index: 2;
+        }
+        .popup-dialog {
+            border: 1px solid #ccc;
+            padding: 20px;
+            background: #fff;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            opacity: 0;
+            transition: opacity 0.5s ease-in-out;
+            z-index: 3;
+            width: 350px; /* ポップアップの幅を350pxに設定 */
+            height: auto; /* 高さを自動に設定 */
+        }
+        .popup-dialog img {
+            width: 100%; /* ポップアップ内の画像の幅を調整 */
+            height: auto; /* 画像の高さを自動調整 */
+            object-fit: contain; /* 画像がポップアップ内に収まるようにする */
+        }
+    </style>
+</head>
+<body>
+    <h1>宿題配信サービス index版 ver.0.1.8</h1>
+    <div id="overlay"></div>
+    <div id="dialog">
+        <p>あなたの名前を入力してください:</p>
+        <input type="text" id="nameInput">
+        <button class="image-button" onclick="greetUser()">
+            <img src="images/kettei1.jpg" alt="挨拶する" width="67" height="auto">
+        </button>
+    </div>
+    <p id="greeting"></p>
+    <button class="image-button" onclick="redirectToGitHub()">
+        <img src="images/gh.jpg" alt="GitHub" width="100" height="auto">
+    </button>
+    <button class="image-button" onclick="redirectToGoogleClassroom()">
+        <img src="images/gc.jpg" alt="Google Classroom" width="100" height="auto">
+    </button>
+    <button class="image-button" onclick="showUnavailableDialog()">
+        <img src="images/alert1.jpg" alt="利用できません" width="100" height="auto">
+    </button>
+
+    <div id="popupOverlay" class="popup-overlay"></div>
+
+    <script>
+        function showDialog() {
+            const dialog = document.getElementById('dialog');
+            const overlay = document.getElementById('overlay');
+            overlay.style.display = 'block';
+            dialog.style.display = 'block';
+            setTimeout(() => {
+                overlay.style.opacity = 1;
+                dialog.style.opacity = 1;
+            }, 10);
+        }
+
+        function hideDialog() {
+            const dialog = document.getElementById('dialog');
+            const overlay = document.getElementById('overlay');
+            dialog.style.opacity = 0;
+            overlay.style.opacity = 0;
+            setTimeout(() => {
+                dialog.style.display = 'none';
+                overlay.style.display = 'none';
+            }, 500);
+        }
+
+        function greetUser() {
+            const name = document.getElementById('nameInput').value;
+            document.getElementById('greeting').innerText = name + 'さん、こんにちは';
+            hideDialog();
+        }
+
+        function redirectToGitHub() {
+            window.location.href = 'https://github.com/';
+        }
+
+        function redirectToGoogleClassroom() {
+            window.location.href = 'https://classroom.google.com/';
+        }
+
+        function showUnavailableDialog() {
+            const popupOverlay = document.getElementById('popupOverlay');
+            const dialog = document.createElement('div');
+            dialog.className = 'popup-dialog';
+            const img = document.createElement('img');
+            img.src = 'images/pop1.jpg';
+            img.alt = 'すみません、現在ご利用いただけません';
+            dialog.appendChild(img);
+            document.body.appendChild(dialog);
+            popupOverlay.style.display = 'block';
+            setTimeout(() => {
+                popupOverlay.style.opacity = 1;
+                dialog.style.opacity = 1;
+            }, 10);
+            setTimeout(() => {
+                dialog.style.opacity = 0;
+                popupOverlay.style.opacity = 0;
+                setTimeout(() => {
+                    document.body.removeChild(dialog);
+                    popupOverlay.style.display = 'none';
+                }, 500);
+            }, 2000);
+        }
+
+        // ダイアログを最初に表示
+        showDialog();
+    </script>
+</body>
+</html>
